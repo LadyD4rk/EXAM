@@ -71,6 +71,22 @@ int		check_line(char *str)
 			return (0);
 		i--;
 	}
+	int		left; // (
+	int		right; // (((((())(((())(())))
+
+	i = 0;
+	left = 0;
+	right = 0;
+	while(str[i])
+	{
+		if (str[i] == '(')
+			left++;
+		else if (str[i] == ')')
+			right++;
+		else if (right > left)
+			return (0);
+		i++;
+	}
 	return (1);
 }
 
