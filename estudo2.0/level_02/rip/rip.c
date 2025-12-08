@@ -71,8 +71,8 @@ int		check_line(char *str)
 			return (0);
 		i--;
 	}
-	int		left; // (
-	int		right; // (((((())(((())(())))
+	int		left;
+	int		right;
 
 	i = 0;
 	left = 0;

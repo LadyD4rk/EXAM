@@ -2,11 +2,9 @@
 
 char *ft_strchr(char *s, int c)
 {
-    int		i;
-
-	i = 0;
-	while (s[i] != c && s[i])
-		i++;
+    int i = 0;
+    while (s[i] != c && s[i])
+        i++;
     if (s[i] == c)
         return s + i;
     else
@@ -15,16 +13,12 @@ char *ft_strchr(char *s, int c)
 
 void *ft_memcpy(void *dest, const void *src, size_t n)
 {
-    size_t	i;
-	char	*aux_dest;
-	char	*aux_src;
+    int		i;
 
 	i = 0;
-	aux_dest = (char *)dest;
-	aux_src = (char *)src;
 	while (i < n)
 	{
-		aux_dest[i] = aux_src[i];
+		((char*)dest)[i] = ((char*)src)[i];
 		i++;
 	}
     return dest;
@@ -32,28 +26,23 @@ void *ft_memcpy(void *dest, const void *src, size_t n)
 
 size_t ft_strlen(char *s)
 {
-	size_t	i;
-
+    size_t ret = 0;
 	if (!s)
 		return (0);
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
+    while (s[ret])
+        ret++;
+    return (ret);
 }
 
 int str_append_mem(char **s1, char *s2, size_t size2)
 {
-    size_t	size1;
-
-	if (!*s1 || !s1)
-		size1 = 0;
-	else
+    size_t size1 = 0;
+	if (*s1)
 		size1 = ft_strlen(*s1);
     char *tmp = malloc(size2 + size1 + 1);
     if (!tmp)
-		return (0);
-	if (*s1)
+        return 0;
+    if (*s1)
 		ft_memcpy(tmp, *s1, size1);
     ft_memcpy(tmp + size1, s2, size2);
     tmp[size1 + size2] = 0;
@@ -69,29 +58,18 @@ int str_append_str(char **s1, char *s2)
 
 void *ft_memmove(void *dest, const void *src, size_t n)
 {
-    unsigned char *d = dest;
-    const unsigned char *s = src;
-
-    if (d == s || n == 0)
-        return dest;
-    if (d < s)
-    {
-        size_t i = 0;
-        while (i < n)
-        {
-            d[i] = s[i];
-            i++;
-        }
-    }
-    else
-    {
-        size_t i = n;
-        while (i > 0)
-        {
-            d[i - 1] = s[i - 1];
-            i--;
-        }
-    }
+    if (dest == src || n == 0)
+		return (dest);
+    if (dest < src)
+        return ft_memcpy(dest, src, n);
+	else
+	{
+		while (n > 0)
+		{
+			((char *)dest)[n - 1] = ((char *)src)[n - 1];
+			n--;
+		}
+	}
     return dest;
 }
 
@@ -99,35 +77,29 @@ char *get_next_line(int fd)
 {
     static char b[BUFFER_SIZE + 1] = "";
     char *ret = NULL;
-	int	read_ret;
+    char *tmp = ft_strchr(b, '\n');
 
-	read_ret = 0;
 	if (!b[0])
 	{
-		read_ret = read(fd, b, BUFFER_SIZE);
+		int read_ret = read(fd, b, BUFFER_SIZE);
         if (read_ret <= 0)
             return NULL;
         b[read_ret] = 0;
 	}
-	char *tmp = ft_strchr(b, '\n');
     while (!tmp)
     {
-		if (!str_append_str(&ret, b))
+        if (!str_append_str(&ret, b))
             return NULL;
-        read_ret = read(fd, b, BUFFER_SIZE);
-		if (read_ret <= 0)
+        int read_ret = read(fd, b, BUFFER_SIZE);
+        if (read_ret <= 0)
 		{
-    		if (ret && *ret)
-    		{
-        		b[0] = '\0';
-        		return ret;
-    		}
-    		free(ret);
-    		b[0] = '\0';
-    		return NULL;
+			if (*ret && ret)
+				break ;
+			free(ret);
+            return NULL;
 		}
         b[read_ret] = 0;
-		tmp = ft_strchr(b, '\n');
+    	tmp = ft_strchr(b, '\n');
     }
     if (!str_append_mem(&ret, b, tmp - b + 1))
     {
@@ -143,12 +115,9 @@ int	main(void)
 	int		fd;
 	char	*line;
 
-	fd = open("get_next_line.h", O_RDONLY);
-	while (1)
+	fd = open("a.txt", O_RDONLY);
+	while (line = get_next_line(fd))
 	{
-		line = get_next_line(fd);
-		if (!line)
-			break ;
 		printf("%s", line);
 		free(line);
 	}

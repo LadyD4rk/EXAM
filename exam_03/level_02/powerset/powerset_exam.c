@@ -26,8 +26,6 @@ void	print_array(int *array, int n)
 	int		i;
 
 	i = 0;
-	if (!array[0] && n == 0)
-		return ;
 	while (i < n)
 	{
 		printf("%i", array[i]);
@@ -59,16 +57,22 @@ void	powerset(int *array, int *print, int x, int print_x, int limit, int value)
 {
 	int		i;
 	
-	i = x;
-	if (check_array(print, print_x, value))
-		print_array(print, print_x);
 	if (x == limit + 1)
 		return ;
-	while (i < limit)
+	else
 	{
-		print[print_x] = array[i];
-		i++;
-		powerset(array, print, i, print_x + 1, limit, value);
+		i = x;
+		if (check_array(print, print_x, value))
+		{
+			print_array(print, print_x);
+			return ;
+		}
+		while (i < limit)
+		{
+			print[print_x] = array[i];
+			i++;
+			powerset(array, print, i, print_x + 1, limit, value);
+		}
 	}
 }
 
