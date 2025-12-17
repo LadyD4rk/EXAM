@@ -88,8 +88,8 @@ int		valid_queen(char **table, int y, int x, int n)
 {
 	int		i;
 
-	i = y - 1;
-	while (i >= 0)
+	i = y;
+	while (i > 0)
 	{
 		if (table[i][x] == '1')
 			return (0);
