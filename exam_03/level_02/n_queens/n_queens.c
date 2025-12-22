@@ -1,7 +1,9 @@
-/* Allowed functions : atoi, fprintf, write, calloc, malloc, free, realloc, stdout, stderr */
+/* Expected files : *.c *.h
+Allowed functions : atoi, fprintf, write, calloc, malloc, free, realloc, stdout, stderr */
 
-#include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
 
 char	**create_table(int n)
 {
@@ -10,13 +12,11 @@ char	**create_table(int n)
 	char	**table;
 
 	table = malloc(sizeof(char *) * (n + 1));
-	if (!table)
-		return (NULL);
 	y = 0;
 	while (y < n)
 	{
-		table[y] = malloc(sizeof(char) * (n + 1));
 		x = 0;
+		table[y] = malloc(sizeof(char) * (n + 1));
 		while (x < n)
 		{
 			table[y][x] = '0';
@@ -27,19 +27,6 @@ char	**create_table(int n)
 	}
 	table[y] = NULL;
 	return (table);
-}
-
-void	free_double(char **table)
-{
-	int		i;
-
-	i = 0;
-	while (table[i])
-	{
-		free(table[i]);
-		i++;
-	}
-	free(table);
 }
 
 void	print_table(char **table, int value)
@@ -56,9 +43,9 @@ void	print_table(char **table, int value)
 			if (table[y][x] == '1')
 			{
 				printf("%i", x);
-				if (y < value)
-					printf(" ");
-				break ;
+				if (y < value - 1)
+				printf(" ");
+					break ;
 			}
 			x++;
 		}
@@ -67,21 +54,34 @@ void	print_table(char **table, int value)
 	printf("\n");
 }
 
-int		check_diagonal(char **table, int y, int x, int add_y, int add_x)
+void	free_double(char **table)
+{
+	int		y;
+
+	y = 0;
+	while(table[y])
+	{
+		free(table[y]);
+		y++;
+	}
+	free(table);
+}
+
+int		check_diagonal(char **table, int x, int y, int add_x)
 {
 	int		new_x = x + add_x;
-	int		new_y = y + add_y;
+	int		new_y = y - 1;
 
-	if (new_y < 0 || new_x < 0)
+	if (new_x < 0 || new_y < 0)
 		return (1);
 	if (table[new_y][new_x] == '1')
 		return (0);
 	if (table[new_y][new_x] == '\0')
 		return (1);
-	return (check_diagonal(table, new_y, new_x, add_y, add_x));
+	return (check_diagonal(table, new_x, new_y, add_x));
 }
 
-int		is_valid(char **table, int x, int y)
+int		is_valid(char **table, int y, int x)
 {
 	int		i;
 
@@ -92,7 +92,7 @@ int		is_valid(char **table, int x, int y)
 			return (0);
 		i--;
 	}
-	return (check_diagonal(table, y, x, -1, -1) && check_diagonal(table, y, x, -1, 1));
+	return (check_diagonal(table, x, y, 1) && check_diagonal(table, x, y, -1));
 }
 
 void	n_queens(char **table, int y, int value)
@@ -106,7 +106,7 @@ void	n_queens(char **table, int y, int value)
 		x = 0;
 		while (table[y][x])
 		{
-			if (is_valid(table, x, y))
+			if (is_valid(table, y, x))
 			{
 				table[y][x] = '1';
 				n_queens(table, y + 1, value);
@@ -128,7 +128,6 @@ int	main(int ac, char **av)
 	table = create_table(value);
 	if (!table)
 		return (1);
-	//print_table(table);
 	n_queens(table, 0, value);
 	free_double(table);
 	return (0);

@@ -1,18 +1,20 @@
-#include <stdio.h>
-#include <unistd.h>
+/* Allowed functions: read, write, strlen, memmem, memmove, malloc, calloc,
+realloc, free, printf, fprintf, stdout, stderr, perror */
 
-int	main(int ac, char **av)
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+int	main(int ac, char  **av)
 {
-	int		x;
 	int		r;
+	int		x;
 	int		i;
 	int		j;
 	char	str[1000000];
 
-	r = 0;
 	x = 1;
-	if (ac != 2)
-		return (1);	
+	r = 0;
 	while (x > 0)
 	{
 		x = read(0, &str[r], 1);
@@ -36,8 +38,8 @@ int	main(int ac, char **av)
 			while (j > 0)
 			{
 				str[i] = '*';
-				j--;
 				i++;
+				j--;
 			}
 		}
 		else

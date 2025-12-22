@@ -1,23 +1,22 @@
-/* Allowed functions: atoi, printf, fprintf, malloc, calloc, realloc, free, stdout,
+/* Expected files   : *.c *.h
+Allowed functions: atoi, printf, fprintf, malloc, calloc, realloc, free, stdout,
 write */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 
-int	*create_array(char **av, int ac)
+int		*create_array(int n, char **av)
 {
-	int		n;
 	int		*array;
+	int		i;
 
-	array = malloc(sizeof(int) * (ac + 1));
-	if (!array)
-		return (NULL);
-	n = 0;
-	while (n < ac)
+	i = 0;
+	array = malloc(sizeof(int) * (n + 1));
+	while (i < n)
 	{
-		array[n] = atoi(av[n]);
-		n++;
+		array[i] = atoi(av[i]);
+		i++;
 	}
 	return (array);
 }
@@ -37,41 +36,39 @@ void	print_array(int *print, int n)
 	printf("\n");
 }
 
-int		count_array(int *print, int n, int value)
+int		is_check(int *print, int x, int value)
 {
-	int		i;
 	int		res;
+	int		i;
 
 	i = 0;
 	res = 0;
-	while (i < n)
+	while (i < x)
 	{
 		res = res + print[i];
 		i++;
 	}
-	if (value == res)
+	if (res == value)
 		return (1);
 	return (0);
 }
 
-void	powerset(int *array, int *print, int x, int x_print, int value, int limit)
+void	powerset(int *array, int *print, int x, int print_x, int value, int limit)
 {
 	int		i;
 
-	if (limit + 1 == x)
+	if (x == limit)
 		return ;
 	else
 	{
+		if (is_check(print, print_x, value))
+			print_array(print, print_x);
 		i = x;
-		if (count_array(print, x_print, value))
+		while (i < limit - 1)
 		{
-			print_array(print, x_print);
-		}
-		while (i < limit)
-		{
-			print[x_print] = array[i];
-			powerset(array, print, i + 1, x_print + 1, value, limit);
-			print[x_print] = 0;
+			print[print_x] = array[i];
+			powerset(array, print, i + 1, print_x + 1, value, limit);
+			print[print_x] = 0;
 			i++;
 		}
 	}
@@ -82,15 +79,11 @@ int	main(int ac, char **av)
 	int		*array;
 	int		*print;
 	int		new_ac;
-	int		value;
 
 	new_ac = ac - 2;
-	value = atoi(av[1]);
-	array = create_array(av + 2, new_ac);
-	if (!array)
-	return (1);
+	array = create_array(new_ac, av + 2);
 	print = calloc(new_ac, (sizeof(int)));
-	powerset(array, print, 0, 0, value, new_ac);
+	powerset(array, print, 0, 0, atoi(av[1]), new_ac + 1);
 	free(array);
 	free(print);
 	return (0);
