@@ -1,18 +1,19 @@
-/* Expected files   : *.c *.h
-Allowed functions: atoi, printf, fprintf, malloc, calloc, realloc, free, stdout,
+/* Allowed functions: atoi, printf, fprintf, malloc, calloc, realloc, free, stdout,
 write */
 
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <unistd.h>
 
-int		*create_array(int n, char **av)
+int		*create_array(char **av, int n)
 {
-	int		*array;
 	int		i;
+	int		*array;
 
+	array = malloc (sizeof(int) * (n + 1));
+	if (!array)
+		return (NULL);
 	i = 0;
-	array = malloc(sizeof(int) * (n + 1));
 	while (i < n)
 	{
 		array[i] = atoi(av[i]);
@@ -21,14 +22,14 @@ int		*create_array(int n, char **av)
 	return (array);
 }
 
-void	print_array(int *print, int n)
+void	print_array(int *array, int n)
 {
 	int		i;
 
 	i = 0;
 	while (i < n)
 	{
-		printf("%i", print[i]);
+		printf("%i", array[i]);
 		if (i < n - 1)
 			printf(" ");
 		i++;
@@ -36,14 +37,14 @@ void	print_array(int *print, int n)
 	printf("\n");
 }
 
-int		is_check(int *print, int x, int value)
+int		check_print(int *print, int n, int value)
 {
-	int		res;
 	int		i;
+	int 	res;
 
 	i = 0;
 	res = 0;
-	while (i < x)
+	while (i < n)
 	{
 		res = res + print[i];
 		i++;
@@ -53,7 +54,7 @@ int		is_check(int *print, int x, int value)
 	return (0);
 }
 
-void	powerset(int *array, int *print, int x, int print_x, int value, int limit)
+void	powerset(int *array, int *print, int x, int x_print, int value, int limit)
 {
 	int		i;
 
@@ -61,29 +62,33 @@ void	powerset(int *array, int *print, int x, int print_x, int value, int limit)
 		return ;
 	else
 	{
-		if (is_check(print, print_x, value))
-			print_array(print, print_x);
+		if (check_print(print, x_print, value))
+			print_array(print, x_print);
 		i = x;
 		while (i < limit - 1)
 		{
-			print[print_x] = array[i];
-			powerset(array, print, i + 1, print_x + 1, value, limit);
-			print[print_x] = 0;
+			print[x_print] = array[i];
+			powerset(array, print, i + 1, x_print + 1, value, limit);
+			print[x_print] = 0;
 			i++;
 		}
 	}
 }
 
-int	main(int ac, char **av)
+int		main(int ac, char **av)
 {
 	int		*array;
 	int		*print;
+	int		value;
 	int		new_ac;
 
+	if (ac < 3)
+		return (1);
 	new_ac = ac - 2;
-	array = create_array(new_ac, av + 2);
-	print = calloc(new_ac, (sizeof(int)));
-	powerset(array, print, 0, 0, atoi(av[1]), new_ac + 1);
+	value = atoi(av[1]);
+	array = create_array(av + 2, new_ac);
+	print = calloc(new_ac, sizeof(int));
+	powerset(array, print, 0, 0, value, new_ac);
 	free(array);
 	free(print);
 	return (0);

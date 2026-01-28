@@ -14,7 +14,8 @@ The order of the solutions is not important.
 For example this should work:
 $> ./rip '(()' | cat -e
  ()$
-( )$
+( )
+() $
 $> ./rip '((()()())())' | cat -e
 ((()()())())$
 $> ./rip '()())()'| cat -e
