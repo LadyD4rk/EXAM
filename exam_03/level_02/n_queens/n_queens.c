@@ -88,7 +88,7 @@ void	n_queens(char **table, int y, int n)
 {
 	int		x;
 
-	if (table[y] == NULL)
+	if (y == n)
 		print_table(table, n);
 	else
 	{
@@ -106,6 +106,19 @@ void	n_queens(char **table, int y, int n)
 	}
 }
 
+void	ft_free(char **arr)
+{
+	int		i;
+
+	i = 0;
+	while (arr[i])
+	{
+		free(arr[i]);
+		i++;
+	}
+	free(arr);
+}
+
 int	main(int ac, char **av)
 {
 	char	**table;
@@ -116,5 +129,6 @@ int	main(int ac, char **av)
 	value = atoi(av[1]);
 	table = create_table(value);
 	n_queens(table, 0, value);
+	ft_free(table);
 	return (0);
 }

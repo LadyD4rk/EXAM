@@ -126,7 +126,7 @@ char *get_next_line(int fd)
     return ret;
 }
 
-int	main(void)
+/* int	main(void)
 {
 	char	*line;
 	int 	fd;
@@ -142,4 +142,4 @@ int	main(void)
 	}
 	close(fd);
 	return (0);
-}
+} */

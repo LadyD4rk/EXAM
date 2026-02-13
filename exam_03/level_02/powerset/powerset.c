@@ -58,20 +58,17 @@ void	powerset(int *array, int *print, int x, int x_print, int value, int limit)
 {
 	int		i;
 
+	if (check_print(print, x_print, value))
+			print_array(print, x_print);
 	if (x == limit)
 		return ;
-	else
+	i = x;
+	while (i < limit)
 	{
-		if (check_print(print, x_print, value))
-			print_array(print, x_print);
-		i = x;
-		while (i < limit - 1)
-		{
-			print[x_print] = array[i];
-			powerset(array, print, i + 1, x_print + 1, value, limit);
-			print[x_print] = 0;
-			i++;
-		}
+		print[x_print] = array[i];
+		powerset(array, print, i + 1, x_print + 1, value, limit);
+		print[x_print] = 0;
+		i++;
 	}
 }
 
