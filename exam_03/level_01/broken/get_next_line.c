@@ -15,6 +15,7 @@ void *ft_memcpy(void *dest, const void *src, size_t n)
 {
     size_t	i;
 
+	i = 0;
 	while (i < n)
 	{
         ((char*)dest)[i] = ((char*)src)[i];
@@ -35,14 +36,13 @@ int str_append_mem(char **s1, char *s2, size_t size2)
 {
 	size_t	size1;
 
-	if (!**s1 || !*s1)
+	if (!*s1 || !s1)
 		size1 = 0;
 	else
 		size1 = ft_strlen(*s1);
-
     char *tmp = malloc(size2 + size1 + 1);
-    if (!tmp)
-        return 0;
+	if (!tmp)
+		return 0;
 	if (*s1)
 		ft_memcpy(tmp, *s1, size1);
 	ft_memcpy(tmp + size1, s2, size2);
@@ -106,7 +106,7 @@ char *get_next_line(int fd)
         int read_ret = read(fd, b, BUFFER_SIZE);
         if (read_ret <= 0)
 		{
-			if (*ret || ret)
+			if (*ret && ret)
 			{
 				b[0] = '\0';
 				return (ret);
@@ -126,7 +126,7 @@ char *get_next_line(int fd)
     return ret;
 }
 
-/* int	main(void)
+int	main(void)
 {
 	char	*line;
 	int 	fd;
@@ -142,4 +142,4 @@ char *get_next_line(int fd)
 	}
 	close(fd);
 	return (0);
-} */
+}
