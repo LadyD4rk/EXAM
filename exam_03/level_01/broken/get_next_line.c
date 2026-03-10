@@ -116,6 +116,7 @@ char *get_next_line(int fd)
 			return NULL;
 		}
         b[read_ret] = 0;
+		tmp = ft_strchr(b, '\n');
     }
     if (!str_append_mem(&ret, b, tmp - b + 1))
     {
